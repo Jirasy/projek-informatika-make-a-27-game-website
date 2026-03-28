@@ -1,0 +1,131 @@
+ html, body { height: 100%; margin: 0; overflow: hidden; }
+  * { font-family: 'Outfit', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  .game-bg {
+    background: linear-gradient(145deg, #0f0f1a 0%, #1a1a2e 40%, #16213e 100%);
+  }
+
+  .menu-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+  }
+
+  .grid-container {
+    background: rgba(255,255,255,0.06);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .grid-cell {
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    transition: none;
+  }
+
+  .tile {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    border-radius: 10px;
+    transition: top 0.12s ease, left 0.12s ease;
+    z-index: 10;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  .tile-new {
+    animation: tileAppear 0.2s ease forwards;
+  }
+
+  .tile-merged {
+    animation: tilePop 0.2s ease forwards;
+  }
+
+  @keyframes tileAppear {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes tilePop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    transition: all 0.2s ease;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(99,102,241,0.4); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: all 0.2s ease;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.14); }
+
+  .size-option {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(255,255,255,0.1);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .size-option:hover { border-color: rgba(139,92,246,0.5); background: rgba(139,92,246,0.1); }
+  .size-option.selected { border-color: #8b5cf6; background: rgba(139,92,246,0.2); box-shadow: 0 0 20px rgba(139,92,246,0.2); }
+
+  .toggle-track {
+    width: 44px; height: 24px; border-radius: 12px;
+    background: rgba(255,255,255,0.15);
+    transition: background 0.2s;
+    cursor: pointer; position: relative;
+  }
+  .toggle-track.active { background: #8b5cf6; }
+  .toggle-knob {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: white; position: absolute; top: 3px; left: 3px;
+    transition: left 0.2s;
+  }
+  .toggle-track.active .toggle-knob { left: 23px; }
+
+  .overlay {
+    background: rgba(15,15,26,0.85);
+    backdrop-filter: blur(8px);
+  }
+
+  .score-pulse { animation: scorePulse 0.3s ease; }
+  @keyframes scorePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  .glow-text {
+    background: linear-gradient(135deg, #a78bfa, #6366f1, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stars {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  }
+  .star {
+    position: absolute; width: 2px; height: 2px; background: rgba(255,255,255,0.3);
+    border-radius: 50%; animation: twinkle 3s infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.8; }
+  }
+
+  .undo-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  @media (max-width: 480px) {
+    .tile { border-radius: 6px; }
+    .grid-container { border-radius: 10px; }
+    .grid-cell { border-radius: 6px; }
+  }

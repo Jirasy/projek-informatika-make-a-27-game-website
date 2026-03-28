@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>2048 Unlimited</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="2048.css">
+ <link rel="stylesheet" href="2048a.css">
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full game-bg text-white overflow-hidden">
+  <div id="app" class="h-full w-full flex flex-col items-center justify-center relative overflow-auto">
+   <div class="stars" id="stars"></div><!-- MENU SCREEN -->
+   <div id="menuScreen" class="w-full h-full flex flex-col items-center justify-center p-4 relative z-10">
+    <div class="menu-card rounded-2xl p-6 sm:p-8 w-full max-w-md">
+     <div class="text-center mb-6">
+      <h1 id="titleText" class="text-4xl sm:text-5xl font-black glow-text mb-2">2048 Unlimited</h1>
+      <p id="subtitleText" class="text-white/50 text-sm sm:text-base">Join the tiles, get to infinity!</p>
+     </div><!-- Grid Size -->
+     <div class="mb-5">
+      <p class="text-white/60 text-xs uppercase tracking-widest mb-3 font-semibold">Grid Size</p>
+      <div class="grid grid-cols-4 gap-2" id="sizeSelector">
+       <div class="size-option rounded-xl p-3 text-center" data-size="3" onclick="selectSize(3)"><span class="text-lg font-bold">3×3</span> <span class="block text-[10px] text-white/40 mt-0.5">Hard</span>
+       </div>
+       <div class="size-option rounded-xl p-3 text-center selected" data-size="4" onclick="selectSize(4)"><span class="text-lg font-bold">4×4</span> <span class="block text-[10px] text-white/40 mt-0.5">Classic</span>
+       </div>
+       <div class="size-option rounded-xl p-3 text-center" data-size="5" onclick="selectSize(5)"><span class="text-lg font-bold">5×5</span> <span class="block text-[10px] text-white/40 mt-0.5">Large</span>
+       </div>
+       <div class="size-option rounded-xl p-3 text-center" data-size="6" onclick="selectSize(6)"><span class="text-lg font-bold">6×6</span> <span class="block text-[10px] text-white/40 mt-0.5">Mega</span>
+       </div>
+      </div>
+     </div><!-- Options -->
+     <div class="mb-6 space-y-3">
+      <p class="text-white/60 text-xs uppercase tracking-widest font-semibold">Options</p>
+      <div class="flex items-center justify-between"><span class="text-sm text-white/80">Enable Undo</span>
+       <div class="toggle-track active" id="toggleUndo" onclick="toggleOption('undo')">
+        <div class="toggle-knob"></div>
+       </div>
+      </div>
+      <div class="flex items-center justify-between"><span class="text-sm text-white/80">Dark Tiles</span>
+       <div class="toggle-track" id="toggleDarkTiles" onclick="toggleOption('darkTiles')">
+        <div class="toggle-knob"></div>
+       </div>
+      </div>
+      <div class="flex items-center justify-between"><span class="text-sm text-white/80">Sound Effects</span>
+       <div class="toggle-track" id="toggleSound" onclick="toggleOption('sound')">
+        <div class="toggle-knob"></div>
+       </div>
+      </div>
+     </div><button class="btn-primary w-full py-3.5 rounded-xl text-lg font-bold flex items-center justify-center gap-2" onclick="startGame()"> <i data-lucide="play" style="width:20px;height:20px;"></i> Play </button>
+    </div>
+   </div><!-- GAME SCREEN -->
+   <div id="gameScreen" class="w-full h-full flex-col items-center justify-center p-3 sm:p-4 relative z-10 hidden"><!-- Header -->
+    <div class="w-full max-w-lg flex items-center justify-between mb-3"><button class="btn-secondary rounded-xl p-2.5" onclick="backToMenu()" aria-label="Back to menu"> <i data-lucide="arrow-left" style="width:20px;height:20px;"></i> </button>
+     <div class="flex gap-2">
+      <div class="bg-white/5 rounded-xl px-4 py-2 text-center border border-white/10">
+       <div class="text-[10px] text-white/40 uppercase tracking-wider font-semibold">
+        Score
+       </div>
+       <div class="text-lg font-bold" id="scoreDisplay">
+        0
+       </div>
+      </div>
+      <div class="bg-white/5 rounded-xl px-4 py-2 text-center border border-white/10">
+       <div class="text-[10px] text-white/40 uppercase tracking-wider font-semibold">
+        Best
+       </div>
+       <div class="text-lg font-bold" id="bestDisplay">
+        0
+       </div>
+      </div>
+     </div>
+     <div class="flex gap-1.5"><button class="btn-secondary rounded-xl p-2.5 undo-btn" id="undoBtn" onclick="undoMove()" disabled aria-label="Undo"> <i data-lucide="undo-2" style="width:20px;height:20px;"></i> </button> <button class="btn-secondary rounded-xl p-2.5" onclick="restartGame()" aria-label="Restart"> <i data-lucide="rotate-ccw" style="width:20px;height:20px;"></i> </button>
+     </div>
+    </div><!-- Highest tile -->
+    <div class="w-full max-w-lg flex justify-center mb-2"><span class="text-xs text-white/30 font-semibold" id="highestTileLabel">Highest: 0</span>
+    </div><!-- Board -->
+    <div class="w-full max-w-lg flex justify-center">
+     <div id="boardWrapper" class="grid-container relative" style="touch-action: none;">
+      <div id="boardGrid"></div>
+      <div id="tileLayer" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></div>
+     </div>
+    </div><!-- Game Over Overlay -->
+    <div id="gameOverOverlay" class="absolute inset-0 overlay flex-col items-center justify-center z-50 hidden">
+     <div class="menu-card rounded-2xl p-8 text-center max-w-sm mx-4">
+      <div class="text-5xl mb-3">
+       💥
+      </div>
+      <h2 class="text-2xl font-black mb-1" id="gameOverTitle">Game Over!</h2>
+      <p class="text-white/50 text-sm mb-2">No more moves available</p>
+      <p class="text-3xl font-black glow-text mb-1" id="finalScore">0</p>
+      <p class="text-white/40 text-xs mb-5">Final Score</p>
+      <div class="flex gap-2"><button class="btn-secondary flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-1" onclick="backToMenu()"> <i data-lucide="home" style="width:16px;height:16px;"></i> Menu </button> <button class="btn-primary flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-1" onclick="restartGame()"> <i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Retry </button>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script src="2048.js"></script>
+  <script src="2048a.js"></script>
+</body>
+</html>
