@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="id" class="h-full">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZYRA AI</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&amp;family=Rajdhani:wght@300;400;500;600;700&amp;display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    .font-orbitron {
+      font-family: "Orbitron", monospace;
+    }
+
+    .font-rajdhani {
+      font-family: "Rajdhani", sans-serif;
+    }
+
+    @keyframes pulse-glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(0, 255, 200, 0.3), 0 0 40px rgba(0, 255, 200, 0.1);
+      }
+
+      50% {
+        box-shadow: 0 0 30px rgba(0, 255, 200, 0.5), 0 0 60px rgba(0, 255, 200, 0.2);
+      }
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes typing {
+      0% {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0.3;
+      }
+    }
+
+    @keyframes scan-line {
+      0% {
+        transform: translateY(-100%);
+      }
+
+      100% {
+        transform: translateY(100%);
+      }
+    }
+
+    @keyframes border-flow {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .animate-pulse-glow {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .animate-typing {
+      animation: typing 1s ease-in-out infinite;
+    }
+
+    .animate-border-flow {
+      background: linear-gradient(90deg, #00ffc8, #00a8ff, #b400ff, #00ffc8);
+      background-size: 300% 100%;
+      animation: border-flow 3s linear infinite;
+    }
+
+    .glass-morphism {
+      background: rgba(10, 25, 47, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 255, 200, 0.2);
+    }
+
+    .message-ai {
+      background: linear-gradient(135deg, rgba(0, 255, 200, 0.1) 0%, rgba(0, 168, 255, 0.1) 100%);
+      border-left: 3px solid #00ffc8;
+    }
+
+    .message-user {
+      background: linear-gradient(135deg, rgba(180, 0, 255, 0.1) 0%, rgba(255, 0, 128, 0.1) 100%);
+      border-right: 3px solid #b400ff;
+    }
+
+    .cyber-grid {
+      background-image:
+        linear-gradient(rgba(0, 255, 200, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 200, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+
+    .scrollbar-cyber::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .scrollbar-cyber::-webkit-scrollbar-track {
+      background: rgba(0, 255, 200, 0.1);
+      border-radius: 3px;
+    }
+
+    .scrollbar-cyber::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #00ffc8, #00a8ff);
+      border-radius: 3px;
+    }
+
+    .input-glow:focus {
+      box-shadow: 0 0 20px rgba(0, 255, 200, 0.3), inset 0 0 20px rgba(0, 255, 200, 0.05);
+    }
+
+    .btn-cyber {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-cyber::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-cyber:hover::before {
+      left: 100%;
+    }
+  </style>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+
+<body class="h-full m-0 p-0 overflow-hidden">
+  <div id="app" class="h-full w-full flex flex-col cyber-grid"
+    style="background: linear-gradient(135deg, #0a0f1a 0%, #0d1929 50%, #0a1628 100%);"><!-- Header -->
+    <header class="flex-shrink-0 p-4 glass-morphism border-b border-cyan-500/20">
+      <div class="max-w-4xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-4"><!-- AI Avatar -->
+          <div class="relative">
+            <div class="w-14 h-14 rounded-full animate-pulse-glow flex items-center justify-center"
+              style="background: linear-gradient(135deg, #00ffc8 0%, #00a8ff 100%);">
+              <div class="w-12 h-12 rounded-full bg-gray-900 flex items-center justify-center">
+                <svg class="w-7 h-7 text-cyan-400 animate-float" viewbox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="1.5">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M12 1v4M12 19v4M1 12h4M19 12h4" />
+                  <path d="M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
+                  <circle cx="12" cy="12" r="9" stroke-dasharray="4 2" />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-green-400 border-2 border-gray-900 animate-pulse">
+            </div>
+          </div>
+          <div>
+            <h1 id="ai-title" class="font-orbitron text-2xl font-bold tracking-wider"
+              style="background: linear-gradient(90deg, #00ffc8, #00a8ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+              ZYRA</h1>
+            <p class="font-rajdhani text-cyan-400/70 text-sm tracking-wide">Neural Intelligence System • Online</p>
+          </div>
+        </div><button id="clear-btn"
+          class="btn-cyber px-4 py-2 rounded-lg font-rajdhani font-semibold text-sm tracking-wide transition-all duration-300 hover:scale-105"
+          style="background: rgba(255, 0, 80, 0.2); border: 1px solid rgba(255, 0, 80, 0.5); color: #ff0050;"> ⟲ Reset
+        </button>
+      </div>
+    </header><!-- Chat Container -->
+    <main class="flex-1 overflow-hidden flex flex-col max-w-4xl mx-auto w-full p-4">
+      <div id="chat-messages" class="flex-1 overflow-y-auto scrollbar-cyber space-y-4 pr-2"><!-- Welcome Message -->
+        <div id="welcome-container" class="flex justify-center py-8">
+          <div class="text-center space-y-4">
+            <div class="w-24 h-24 mx-auto rounded-full animate-pulse-glow flex items-center justify-center"
+              style="background: linear-gradient(135deg, #00ffc8 0%, #00a8ff 100%);">
+              <div class="w-20 h-20 rounded-full bg-gray-900 flex items-center justify-center">
+                <svg class="w-10 h-10 text-cyan-400 animate-float" viewbox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="1.5">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M12 1v4M12 19v4M1 12h4M19 12h4" />
+                  <path d="M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
+                  <circle cx="12" cy="12" r="9" stroke-dasharray="4 2" />
+                </svg>
+              </div>
+            </div>
+            <h2 id="welcome-title" class="font-orbitron text-xl text-cyan-400">Selamat Datang!</h2>
+            <p id="welcome-text" class="font-rajdhani text-gray-400 max-w-md">Saya ZYRA, asisten AI yang siap membantu
+              Anda. Tanyakan apa saja!</p>
+          </div>
+        </div>
+      </div><!-- Typing Indicator -->
+      <div id="typing-indicator" class="hidden py-2">
+        <div class="flex items-center gap-2 text-cyan-400/70 font-rajdhani text-sm"><span
+            class="w-2 h-2 rounded-full bg-cyan-400 animate-typing" style="animation-delay: 0ms;"></span> <span
+            class="w-2 h-2 rounded-full bg-cyan-400 animate-typing" style="animation-delay: 150ms;"></span> <span
+            class="w-2 h-2 rounded-full bg-cyan-400 animate-typing" style="animation-delay: 300ms;"></span> <span
+            id="typing-text">ZYRA sedang berpikir...</span>
+        </div>
+      </div><!-- Input Area -->
+      <div class="flex-shrink-0 pt-4">
+        <div class="p-1 rounded-2xl animate-border-flow">
+          <div class="glass-morphism rounded-xl p-3">
+            <form id="chat-form" class="flex gap-3"><input type="text" id="message-input"
+                placeholder="Ketik pesan Anda..."
+                class="flex-1 bg-gray-900/50 border border-cyan-500/30 rounded-xl px-4 py-3 font-rajdhani text-white placeholder-gray-500 focus:outline-none input-glow transition-all duration-300"
+                autocomplete="off"> <button type="submit" id="send-btn"
+                class="btn-cyber px-6 py-3 rounded-xl font-rajdhani font-bold tracking-wide transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                style="background: linear-gradient(135deg, #00ffc8 0%, #00a8ff 100%); color: #0a0f1a;"> <span
+                  class="flex items-center gap-2">
+                  <svg class="w-5 h-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                  </svg> Kirim </span> </button>
+            </form>
+          </div>
+        </div><!-- Quick Actions -->
+        <div class="flex flex-wrap gap-2 mt-3 justify-center"><button
+            class="quick-action px-3 py-1.5 rounded-lg font-rajdhani text-sm transition-all duration-300 hover:scale-105"
+            style="background: rgba(0, 255, 200, 0.1); border: 1px solid rgba(0, 255, 200, 0.3); color: #00ffc8;"
+            data-message="Siapa kamu?"> 🤖 Siapa kamu? </button> <button
+            class="quick-action px-3 py-1.5 rounded-lg font-rajdhani text-sm transition-all duration-300 hover:scale-105"
+            style="background: rgba(0, 168, 255, 0.1); border: 1px solid rgba(0, 168, 255, 0.3); color: #00a8ff;"
+            data-message="Apa yang bisa kamu lakukan?"> 💡 Kemampuanmu? </button> <button
+            class="quick-action px-3 py-1.5 rounded-lg font-rajdhani text-sm transition-all duration-300 hover:scale-105"
+            style="background: rgba(180, 0, 255, 0.1); border: 1px solid rgba(180, 0, 255, 0.3); color: #b400ff;"
+            data-message="Ceritakan fakta menarik!"> ✨ Fakta Menarik </button>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      ai_name: "ZYRA",
+      welcome_message: "Saya ZYRA, asisten AI yang siap membantu Anda. Tanyakan apa saja!",
+      primary_color: "#00ffc8",
+      secondary_color: "#0a0f1a",
+      text_color: "#ffffff",
+      accent_color: "#00a8ff",
+      surface_color: "#0d1929",
+      font_family: "Rajdhani",
+      font_size: 16
+    };
+
+    let config = { ...defaultConfig };
+    let chatHistory = [];
+    let isProcessing = false;
+
+    // AI Response Logic
+    const aiResponses = {
+      greetings: ["halo", "hai", "hey", "hi", "selamat", "pagi", "siang", "sore", "malam"],
+      identity: ["siapa kamu", "siapa zyra", "kamu siapa", "nama kamu", "perkenalkan"],
+      abilities: ["bisa apa", "kemampuan", "apa yang bisa", "fitur", "fungsi"],
+      facts: ["fakta", "menarik", "unik", "tahukah"],
+      thanks: ["terima kasih", "thanks", "makasih", "tq", "thx"],
+      bye: ["bye", "dadah", "sampai jumpa", "selamat tinggal"]
+    };
+
+    const responses = {
+      greetings: () => {
+        const greets = [
+          `Halo! 👋 Saya ${config.ai_name}, senang bertemu denganmu! Ada yang bisa saya bantu hari ini?`,
+          `Hai! ✨ Selamat datang! Saya ${config.ai_name}, siap membantu apapun yang kamu butuhkan.`,
+          `Hey there! 🌟 Saya ${config.ai_name}. Apa kabar? Ceritakan apa yang ada di pikiranmu!`
+        ];
+        return greets[Math.floor(Math.random() * greets.length)];
+      },
+      identity: () => {
+        return `Saya adalah ${config.ai_name} 🤖 - Neural Intelligence System yang dirancang untuk membantu dan berinteraksi denganmu! Saya dibekali kemampuan untuk:\n\n• 💬 Melakukan percakapan natural\n• 🧠 Menjawab pertanyaan\n• 💡 Memberikan ide dan saran\n• 🎯 Membantu berbagai tugas\n\nSaya di sini untuk membuat harimu lebih produktif dan menyenangkan!`;
+      },
+      abilities: () => {
+        return `Tentu! Ini yang bisa saya lakukan untuk kamu:\n\n🔮 **Percakapan Cerdas**\nSaya bisa chat denganmu tentang berbagai topik!\n\n📚 **Berbagi Informasi**\nMemberikan fakta menarik dan pengetahuan umum.\n\n💭 **Brainstorming**\nMembantu mengembangkan ide-ide kreatifmu.\n\n🎮 **Teman Virtual**\nMenemanimu ngobrol kapan saja!\n\nApa yang ingin kamu coba?`;
+      },
+      facts: () => {
+        const facts = [
+          `🌟 Tahukah kamu? Gurita memiliki 3 jantung dan darah berwarna biru! Dua jantung memompa darah ke insang, dan satu ke seluruh tubuh.`,
+          `🚀 Fakta luar angkasa: Satu hari di Venus lebih lama dari satu tahunnya! Venus membutuhkan 243 hari Bumi untuk berotasi, tapi hanya 225 hari untuk mengorbit Matahari.`,
+          `🧠 Mind-blowing: Otak manusia menghasilkan listrik sekitar 12-25 watt - cukup untuk menyalakan lampu LED kecil!`,
+          `🌊 Tahukah kamu? Lebih dari 80% lautan di Bumi belum dijelajahi. Kita lebih tahu tentang permukaan Mars daripada dasar laut kita!`,
+          `🍯 Fun fact: Madu tidak pernah basi! Arkeolog menemukan madu berusia 3000 tahun di makam Mesir yang masih bisa dimakan.`,
+          `🐙 Fakta unik: Cumi-cumi raksasa memiliki mata sebesar bola basket - terbesar di dunia hewan!`
+        ];
+        return facts[Math.floor(Math.random() * facts.length)];
+      },
+      thanks: () => {
+        const thanks = [
+          `Sama-sama! 😊 Senang bisa membantu. Jangan ragu untuk bertanya lagi ya!`,
+          `Dengan senang hati! ✨ Aku selalu di sini kalau kamu butuh bantuan!`,
+          `Terima kasih kembali! 🌟 Semoga harimu menyenangkan!`
+        ];
+        return thanks[Math.floor(Math.random() * thanks.length)];
+      },
+      bye: () => {
+        const byes = [
+          `Sampai jumpa! 👋 Senang ngobrol denganmu. Kembali lagi kapan saja ya!`,
+          `Dadah! 🌟 Semoga harimu luar biasa! Sampai ketemu lagi!`,
+          `Bye bye! ✨ Jaga diri baik-baik ya. Aku akan selalu ada di sini!`
+        ];
+        return byes[Math.floor(Math.random() * byes.length)];
+      },
+      default: () => {
+        const defaults = [
+          `Hmm, pertanyaan menarik! 🤔 Sebagai AI, saya masih terus belajar. Bisa ceritakan lebih detail apa yang kamu maksud?`,
+          `Wah, topik yang bagus! 💭 Saya ingin membantu lebih baik. Bisa jelaskan lebih lanjut?`,
+          `Menarik! ✨ Saya mencoba memahami maksudmu. Apakah bisa diperjelas sedikit?`,
+          `Saya mendengarkanmu! 👂 Untuk memberikan jawaban terbaik, boleh dijelaskan lebih detail?`
+        ];
+        return defaults[Math.floor(Math.random() * defaults.length)];
+      }
+    };
+
+    function getAIResponse(message) {
+      const lowerMessage = message.toLowerCase();
+
+      for (const [category, keywords] of Object.entries(aiResponses)) {
+        if (keywords.some(keyword => lowerMessage.includes(keyword))) {
+          return responses[category]();
+        }
+      }
+
+      return responses.default();
+    }
+
+    function createMessageElement(message, isUser) {
+      const div = document.createElement("div");
+      div.className = `flex ${isUser ? "justify-end" : "justify-start"} animate-fade-in`;
+
+      const messageClass = isUser ? "message-user" : "message-ai";
+      const alignClass = isUser ? "text-right" : "text-left";
+
+      div.innerHTML = `
+        <div class="${messageClass} ${alignClass} max-w-[80%] rounded-2xl px-4 py-3 glass-morphism">
+          <p class="font-rajdhani text-white whitespace-pre-line" style="font-size: ${config.font_size}px;">${message}</p>
+          <span class="text-xs text-gray-500 mt-1 block">${new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}</span>
+        </div>
+      `;
+
+      return div;
+    }
+
+    function showTypingIndicator() {
+      const indicator = document.getElementById("typing-indicator");
+      const typingText = document.getElementById("typing-text");
+      typingText.textContent = `${config.ai_name} sedang berpikir...`;
+      indicator.classList.remove("hidden");
+    }
+
+    function hideTypingIndicator() {
+      document.getElementById("typing-indicator").classList.add("hidden");
+    }
+
+    function scrollToBottom() {
+      const chatMessages = document.getElementById("chat-messages");
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function sendMessage(message) {
+      if (isProcessing || !message.trim()) return;
+
+      isProcessing = true;
+      const welcomeContainer = document.getElementById("welcome-container");
+      if (welcomeContainer) {
+        welcomeContainer.remove();
+      }
+
+      const chatMessages = document.getElementById("chat-messages");
+
+      // Add user message
+      const userMsgElement = createMessageElement(message, true);
+      chatMessages.appendChild(userMsgElement);
+      scrollToBottom();
+
+      // Save user message
+      const userMsgData = {
+        id: Date.now().toString(),
+        role: "user",
+        content: message,
+        timestamp: new Date().toISOString()
+      };
+
+      if (chatHistory.length < 999) {
+        await window.dataSdk.create(userMsgData);
+      }
+
+      // Show typing
+      showTypingIndicator();
+      scrollToBottom();
+
+      // Simulate thinking time
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1500));
+
+      // Get AI response
+      const aiResponse = getAIResponse(message);
+
+      hideTypingIndicator();
+
+      // Add AI message
+      const aiMsgElement = createMessageElement(aiResponse, false);
+      chatMessages.appendChild(aiMsgElement);
+      scrollToBottom();
+
+      // Save AI message
+      const aiMsgData = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: aiResponse,
+        timestamp: new Date().toISOString()
+      };
+
+      if (chatHistory.length < 998) {
+        await window.dataSdk.create(aiMsgData);
+      }
+
+      isProcessing = false;
+    }
+
+    async function clearChat() {
+      const chatMessages = document.getElementById("chat-messages");
+
+      // Delete all messages from storage
+      for (const msg of chatHistory) {
+        await window.dataSdk.delete(msg);
+      }
+
+      chatHistory = [];
+
+      // Reset UI
+      chatMessages.innerHTML = `
+        <div id="welcome-container" class="flex justify-center py-8">
+          <div class="text-center space-y-4">
+            <div class="w-24 h-24 mx-auto rounded-full animate-pulse-glow flex items-center justify-center" style="background: linear-gradient(135deg, #00ffc8 0%, #00a8ff 100%);">
+              <div class="w-20 h-20 rounded-full bg-gray-900 flex items-center justify-center">
+                <svg class="w-10 h-10 text-cyan-400 animate-float" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 1v4M12 19v4M1 12h4M19 12h4"/>
+                  <path d="M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+                  <circle cx="12" cy="12" r="9" stroke-dasharray="4 2"/>
+                </svg>
+              </div>
+            </div>
+            <h2 id="welcome-title" class="font-orbitron text-xl text-cyan-400">Selamat Datang!</h2>
+            <p id="welcome-text" class="font-rajdhani text-gray-400 max-w-md">${config.welcome_message}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderChatHistory(data) {
+      chatHistory = data;
+      const chatMessages = document.getElementById("chat-messages");
+
+      if (data.length === 0) {
+        return;
+      }
+
+      // Remove welcome if there are messages
+      const welcomeContainer = document.getElementById("welcome-container");
+      if (welcomeContainer && data.length > 0) {
+        welcomeContainer.remove();
+      }
+
+      // Sort by timestamp
+      const sorted = [...data].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+      // Clear and rebuild
+      const existingMsgs = chatMessages.querySelectorAll(".flex.justify-start, .flex.justify-end");
+      existingMsgs.forEach(el => el.remove());
+
+      sorted.forEach(msg => {
+        const isUser = msg.role === "user";
+        const element = createMessageElement(msg.content, isUser);
+        chatMessages.appendChild(element);
+      });
+
+      scrollToBottom();
+    }
+
+    function updateUI() {
+      const aiTitle = document.getElementById("ai-title");
+      const welcomeText = document.getElementById("welcome-text");
+
+      if (aiTitle) aiTitle.textContent = config.ai_name || defaultConfig.ai_name;
+      if (welcomeText) welcomeText.textContent = config.welcome_message || defaultConfig.welcome_message;
+    }
+
+    // Initialize
+    async function init() {
+      // Initialize Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (newConfig) => {
+            config = { ...defaultConfig, ...newConfig };
+            updateUI();
+          },
+          mapToCapabilities: (cfg) => ({
+            recolorables: [
+              {
+                get: () => cfg.primary_color || defaultConfig.primary_color,
+                set: (v) => { cfg.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); }
+              },
+              {
+                get: () => cfg.secondary_color || defaultConfig.secondary_color,
+                set: (v) => { cfg.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); }
+              },
+              {
+                get: () => cfg.text_color || defaultConfig.text_color,
+                set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+              },
+              {
+                get: () => cfg.accent_color || defaultConfig.accent_color,
+                set: (v) => { cfg.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); }
+              },
+              {
+                get: () => cfg.surface_color || defaultConfig.surface_color,
+                set: (v) => { cfg.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }
+              }
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => cfg.font_family || defaultConfig.font_family,
+              set: (v) => { cfg.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+            },
+            fontSizeable: {
+              get: () => cfg.font_size || defaultConfig.font_size,
+              set: (v) => { cfg.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+            }
+          }),
+          mapToEditPanelValues: (cfg) => new Map([
+            ["ai_name", cfg.ai_name || defaultConfig.ai_name],
+            ["welcome_message", cfg.welcome_message || defaultConfig.welcome_message]
+          ])
+        });
+      }
+
+      // Initialize Data SDK
+      if (window.dataSdk) {
+        const dataHandler = {
+          onDataChanged(data) {
+            renderChatHistory(data);
+          }
+        };
+
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error("Failed to initialize Data SDK");
+        }
+      }
+
+      // Event Listeners
+      const chatForm = document.getElementById("chat-form");
+      const messageInput = document.getElementById("message-input");
+      const clearBtn = document.getElementById("clear-btn");
+      const quickActions = document.querySelectorAll(".quick-action");
+
+      chatForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const message = messageInput.value.trim();
+        if (message) {
+          messageInput.value = "";
+          await sendMessage(message);
+        }
+      });
+
+      clearBtn.addEventListener("click", async () => {
+        await clearChat();
+      });
+
+      quickActions.forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const message = btn.dataset.message;
+          if (message) {
+            await sendMessage(message);
+          }
+        });
+      });
+
+      updateUI();
+    }
+
+    init();
+  </script>
+  <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement("script"); d.innerHTML = "window.__CF$cv$params={r:"9d877a3377d6ea7f",t:"MTc3Mjg2NDI0OS4wMDAwMDA = "};var a=document.createElement("script");a.nonce="";a.src=" / cdn - cgi / challenge - platform / scripts / jsd / main.js";document.getElementsByTagName("head")[0].appendChild(a);"; b.getElementsByTagName("head")[0].appendChild(d) } } if (document.body) { var a = document.createElement("iframe"); a.height = 1; a.width = 1; a.style.position = "absolute"; a.style.top = 0; a.style.left = 0; a.style.border = "none"; a.style.visibility = "hidden"; document.body.appendChild(a); if ("loading" !== document.readyState) c(); else if (window.addEventListener) document.addEventListener("DOMContentLoaded", c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); "loading" !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>

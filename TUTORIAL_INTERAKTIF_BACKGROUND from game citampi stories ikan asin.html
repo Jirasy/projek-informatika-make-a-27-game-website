@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial: Background Dinamis Berdasarkan Jam</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background 2s ease-in-out;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* CSS Classes untuk setiap waktu */
+        .night { 
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #2a2050 100%);
+            color: white;
+        }
+        
+        .early-morning { 
+            background: linear-gradient(135deg, #2d1b4e 0%, #3d2d5f 50%, #5d3d7f 100%);
+            color: white;
+        }
+        
+        .morning { 
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 50%, #ffa500 100%);
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .noon { 
+            background: linear-gradient(135deg, #87ceeb 0%, #add8e6 50%, #b0e0e6 100%);
+            color: #003d5c;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
+        }
+        
+        .afternoon { 
+            background: linear-gradient(135deg, #87ceeb 0%, #ffa500 50%, #ff8c42 100%);
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .evening { 
+            background: linear-gradient(135deg, #ff6b35 0%, #ff4500 50%, #8b4513 100%);
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .dusk { 
+            background: linear-gradient(135deg, #4a1035 0%, #8b3a62 50%, #d9534f 100%);
+            color: white;
+        }
+
+        /* Container untuk konten */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            border-left: 4px solid currentColor;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .time-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .slider-container {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .explanation {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            line-height: 1.8;
+        }
+
+        .code-highlight {
+            background: rgba(255, 255, 0, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            color: currentColor;
+            border: 2px solid currentColor;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin: 0.5rem;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .time-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .time-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .time-card:hover {
+            border-color: currentColor;
+            transform: scale(1.05);
+        }
+
+        .time-card.active {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: currentColor;
+            font-weight: bold;
+        }
+
+        .emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid currentColor;
+        }
+
+        .step h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .container { padding: 1rem; }
+            .time-categories { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Tutorial: Background Dinamis Berdasarkan Jam</h1>
+        
+        <div class="time-display">
+            📅 Jam saat ini: <span id="current-time">--:--</span> | 
+            Tema: <span id="current-theme">--</span>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="step">
+            <h3>STEP 1: Ambil Jam dari Device User</h3>
+            <p>Gunakan JavaScript untuk mendapatkan jam saat ini:</p>
+            <div class="code-block">
+const now = new Date();           // Buat object tanggal/waktu
+const hours = now.getHours();     // Ambil jam (0-23)
+const minutes = now.getMinutes(); // Ambil menit (0-59)
+
+console.log(hours);   // Output: 14 (jam 2 sore)
+console.log(minutes); // Output: 30 (30 menit)
+            </div>
+            <p><strong>Penjelasan:</strong> <span class="code-highlight">getHours()</span> mengembalikan angka 0-23 (format 24 jam)</p>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step">
+            <h3>STEP 2: Buat CSS Class untuk Setiap Waktu</h3>
+            <p>Definisikan warna background untuk setiap periode waktu:</p>
+            <div class="code-block">
+.night { 
+  background: linear-gradient(135deg, #0a0e27, #1a1a3e);
+}
+
+.morning { 
+  background: linear-gradient(135deg, #ff6b35, #ffa500);
+}
+
+.noon { 
+  background: linear-gradient(135deg, #87ceeb, #add8e6);
+}
+            </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step">
+            <h3>STEP 3: Tentukan Class Berdasarkan Jam</h3>
+            <p>Gunakan if-else atau switch untuk menentukan class mana yang dipakai:</p>
+            <div class="code-block">
+function getTimeClass(hours) {
+  if (hours >= 0 && hours < 5) {
+    return 'night';
+  } else if (hours >= 5 && hours < 7) {
+    return 'early-morning';
+  } else if (hours >= 7 && hours < 11) {
+    return 'morning';
+  } else if (hours >= 11 && hours < 14) {
+    return 'noon';
+  } else if (hours >= 14 && hours < 17) {
+    return 'afternoon';
+  } else if (hours >= 17 && hours < 19) {
+    return 'evening';
+  } else {
+    return 'dusk';
+  }
+}
+            </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step">
+            <h3>STEP 4: Terapkan Class ke Element</h3>
+            <p>Gunakan JavaScript untuk mengubah class di element:</p>
+            <div class="code-block">
+const timeClass = getTimeClass(hours);
+const body = document.querySelector('body');
+
+// Hapus class lama
+body.className = '';
+
+// Tambah class baru
+body.classList.add(timeClass);
+            </div>
+        </div>
+
+        <!-- STEP 5 -->
+        <div class="step">
+            <h3>STEP 5: Update Otomatis dengan setInterval</h3>
+            <p>Buat background update otomatis setiap detik atau menit:</p>
+            <div class="code-block">
+// Update setiap 1 menit (60000 milidetik)
+setInterval(() => {
+  updateBackground();
+}, 60000);
+
+// Atau update setiap detik
+setInterval(() => {
+  updateBackground();
+}, 1000);
+            </div>
+            <p><strong>Tips:</strong> Update setiap menit lebih efisien daripada setiap detik</p>
+        </div>
+
+        <!-- Waktu Categories -->
+        <h3 style="margin-top: 2rem; margin-bottom: 1rem;">🕐 Kategori Waktu</h3>
+        <div class="time-categories" id="time-categories">
+            <!-- Akan di-generate oleh JavaScript -->
+        </div>
+
+        <!-- Slider untuk testing -->
+        <div class="slider-container">
+            <h3>🎚️ Tes Sendiri - Geser untuk Ubah Jam:</h3>
+            <input type="range" id="time-slider" min="0" max="23" value="12">
+            <div style="text-align: center; margin-top: 1rem;">
+                <p>Jam: <span id="slider-time">12</span>:00</p>
+            </div>
+        </div>
+
+        <!-- Buttons untuk Quick Test -->
+        <div class="button-group">
+            <button onclick="setTestTime(0)">🌙 Malam (00:00)</button>
+            <button onclick="setTestTime(6)">🌅 Pagi (06:00)</button>
+            <button onclick="setTestTime(12)">☀️ Siang (12:00)</button>
+            <button onclick="setTestTime(15)">🌤️ Sore (15:00)</button>
+            <button onclick="setTestTime(18)">🌅 Petang (18:00)</button>
+            <button onclick="setTestTime(20)">🌆 Malam Hari (20:00)</button>
+            <button onclick="useRealTime()">⏰ Gunakan Jam Asli</button>
+        </div>
+
+        <!-- Explanation -->
+        <div class="explanation">
+            <h3>💡 Penjelasan Logika Lengkap:</h3>
+            <p>
+                <strong>Contoh:</strong> Jika jam saat ini adalah 14 (2 sore)<br>
+                <br>
+                Kode akan cek: "Apakah 14 >= 14 && 14 < 17?" → <strong>YA</strong><br>
+                Maka <span class="code-highlight">timeClass = 'afternoon'</span><br>
+                Lalu element body akan mendapat class "afternoon"<br>
+                Dan background akan berubah menjadi warna sore (orange + biru)<br>
+                <br>
+                Setiap 1 menit, proses ini diulang otomatis dengan <span class="code-highlight">setInterval</span>
+            </p>
+        </div>
+
+        <div class="info-box">
+            <h3>✨ Keuntungan Cara Ini:</h3>
+            <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                <li>✅ Tidak perlu server atau database</li>
+                <li>✅ Berubah otomatis sesuai jam device user</li>
+                <li>✅ Transisi smooth dan indah</li>
+                <li>✅ Bekerja di semua device (mobile, tablet, desktop)</li>
+                <li>✅ Lightweight dan cepat</li>
+                <li>✅ Setiap user melihat waktu mereka sendiri</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Data kategori waktu
+        const timeCategories = [
+            { range: '00:00-04:59', name: 'Malam', emoji: '🌙', class: 'night' },
+            { range: '05:00-06:59', name: 'Dini Hari', emoji: '🌌', class: 'early-morning' },
+            { range: '07:00-10:59', name: 'Pagi', emoji: '🌅', class: 'morning' },
+            { range: '11:00-13:59', name: 'Siang', emoji: '☀️', class: 'noon' },
+            { range: '14:00-16:59', name: 'Sore', emoji: '🌤️', class: 'afternoon' },
+            { range: '17:00-18:59', name: 'Petang', emoji: '🌅', class: 'evening' },
+            { range: '19:00-23:59', name: 'Malam Hari', emoji: '🌆', class: 'dusk' }
+        ];
+
+        let useRealTimeMode = true;
+        let testHour = null;
+
+        // Fungsi mendapatkan class berdasarkan jam
+        function getTimeClass(hours) {
+            if (hours >= 0 && hours < 5) return 'night';
+            else if (hours >= 5 && hours < 7) return 'early-morning';
+            else if (hours >= 7 && hours < 11) return 'morning';
+            else if (hours >= 11 && hours < 14) return 'noon';
+            else if (hours >= 14 && hours < 17) return 'afternoon';
+            else if (hours >= 17 && hours < 19) return 'evening';
+            else return 'dusk';
+        }
+
+        // Update background
+        function updateBackground() {
+            let hours;
+            
+            if (useRealTimeMode) {
+                const now = new Date();
+                hours = now.getHours();
+            } else {
+                hours = testHour;
+            }
+            
+            const timeClass = getTimeClass(hours);
+            const body = document.querySelector('body');
+            body.className = timeClass;
+            
+            // Update display
+            const now = new Date();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('current-time').textContent = 
+                `${String(hours).padStart(2, '0')}:${minutes}`;
+            document.getElementById('current-theme').textContent = 
+                timeCategories.find(t => t.class === timeClass).name;
+            
+            // Highlight active category
+            document.querySelectorAll('.time-card').forEach(card => {
+                card.classList.remove('active');
+                if (card.dataset.class === timeClass) {
+                    card.classList.add('active');
+                }
+            });
+        }
+
+        // Set test time
+        function setTestTime(hour) {
+            useRealTimeMode = false;
+            testHour = hour;
+            document.getElementById('time-slider').value = hour;
+            document.getElementById('slider-time').textContent = hour;
+            updateBackground();
+        }
+
+        // Use real time
+        function useRealTime() {
+            useRealTimeMode = true;
+            updateBackground();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Generate time categories
+            const container = document.getElementById('time-categories');
+            timeCategories.forEach(cat => {
+                const card = document.createElement('div');
+                card.className = 'time-card';
+                card.dataset.class = cat.class;
+                card.innerHTML = `
+                    <div class="emoji">${cat.emoji}</div>
+                    <div><strong>${cat.name}</strong></div>
+                    <div style="font-size: 0.85rem;">${cat.range}</div>
+                `;
+                card.addEventListener('click', () => {
+                    const hour = parseInt(cat.range.split(':')[0]);
+                    setTestTime(hour);
+                });
+                container.appendChild(card);
+            });
+            
+            // Setup slider
+            document.getElementById('time-slider').addEventListener('input', (e) => {
+                const hour = parseInt(e.target.value);
+                setTestTime(hour);
+            });
+            
+            // Initial update
+            updateBackground();
+            
+            // Update setiap menit
+            setInterval(() => {
+                if (useRealTimeMode) updateBackground();
+            }, 60000);
+        });
+    </script>
+</body>
+</html>
